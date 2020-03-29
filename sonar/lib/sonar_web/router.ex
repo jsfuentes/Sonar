@@ -20,7 +20,9 @@ defmodule SonarWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", SonarWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", SonarWeb do
+    pipe_through :api
+
+    get "/", ApiController, :test
+  end
 end
