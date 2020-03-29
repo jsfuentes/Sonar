@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css?family=Quicksand&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,800&display=swap" rel="stylesheet">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <style>
 html, body {
     margin: 0;
@@ -226,17 +227,19 @@ strong {
 
 <script>
 
-    function detectImage(imgData) {
-    //     $.post('/submitJSONData',  // url
-    //    { myData: 'This is my data.' }, // data to be submit
-    //    function(data, status, xhr) {   // success callback function
-    //             alert('status: ' + status + ', data: ' + data.responseData);
-    //         },
-    //    'json'); // response data format
+    function detectImage(imageURI) {
+      console.log({imageURI});
+      const image = imageURI.replace(/^data:image.+;base64,/, '');
+      console.log({image});
+      axios.post('/api/image', {image})
+        .then(resp => {
+          console.log(resp.data.audioContent);
+          playSound(resp.data.audioContent);
+        });
     }
 
     function playSound(sound) {
-        var audio = new Audio(sound);
+        var audio = new Audio("data:audio/mp3;base64," + sound);
         audio.play();
     }
 
@@ -248,13 +251,10 @@ strong {
         canvas.height = video.videoHeight;
         canvas.getContext('2d')
               .drawImage(video, 0, 0, canvas.width, canvas.height);
- 
-        var img = document.createElement("img");
-        img.src = canvas.toDataURL("image/png");
-        var filename = 'Test.png';
-        var formdata = new FormData();
-        formdata.append(filename, img);
-        return formdata;
+
+        const image = canvas.toDataURL('image/jpeg', 0.5);
+        return image;
+        //var img = document.createElement("img");
         // output.prepend(img);
     }
 

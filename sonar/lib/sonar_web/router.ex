@@ -23,6 +23,7 @@ defmodule SonarWeb.Router do
   scope "/api", SonarWeb do
     pipe_through :api
 
-    get "/", ApiController, :test
+    get "/img", ApiController, :test
+    post "/image", ApiController, :image
   end
 end
